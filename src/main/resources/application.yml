@@ -14,8 +14,8 @@ spring:
       ddl-auto: update
     show-sql: true
 
-# JWT ?? ??
+# JWT
 jwt:
   issuer: ringle@spring.security.com
-  access_expiration: 86400000  # 1? (???)
-  secret-key: ringle-assignment-1
+  access_expiration: 86400000  # 1 day
+  secret-key: ringle-assignment-secret-key-for-hmac-sha256-token

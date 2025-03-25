@@ -3,7 +3,10 @@ package com.ringle.domain.user.repository;
 import com.ringle.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * 사용자 엔티티용 JPA Repository
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
-    boolean existsByEmail(String email);
+    User findByEmail(String email); // 이메일(email) 기반 사용자 조회
+    boolean existsByEmail(String email); // 중복 이메일 검사
 }

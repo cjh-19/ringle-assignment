@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ringle?characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# JWT ?? ??
+jwt:
+  issuer: ringle@spring.security.com
+  access_expiration: 86400000  # 1? (???)
+  secret-key: ringle-assignment-1

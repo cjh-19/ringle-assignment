@@ -1,0 +1,29 @@
+package com.ringle.common.exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum ExceptionCode {
+
+    // 유저 관련 예외
+    USER_NOT_FOUND(404, "USER_001", "사용자를 찾을 수 없습니다."),
+    DUPLICATE_EMAIL(409, "USER_002", "이미 사용 중인 이메일입니다."),
+    PASSWORD_MISMATCH(400, "USER_003", "비밀번호가 일치하지 않습니다."),
+
+    // 시스템 오류
+    NULL_POINT_ERROR(500, "SYS_001", "NullPointerException 발생"),
+
+    // 요청 값 유효성 검증 실패
+    NOT_VALID_ERROR(400, "SYS_002", "유효성 검증 오류");
+
+    /**
+     * status: HTTP 응답 코드
+     * code: 시스템 내부용 오류 코드 (카테고리/상태 파악에 유용)
+     * message: 사용자에게 제공할 메시지
+     */
+    private final int status;
+    private final String code;
+    private final String message;
+}

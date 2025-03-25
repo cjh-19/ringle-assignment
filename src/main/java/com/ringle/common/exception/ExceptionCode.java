@@ -15,8 +15,9 @@ public enum ExceptionCode {
     // 수업 가능 시간 등록 / 삭제 예외
     INVALID_START_TIME(400, "AVAILABILITY_001", "시작 시간은 정각 또는 30분이어야 합니다."),
     ALREADY_BOOKED(409, "AVAILABILITY_002", "이미 예약된 시간은 삭제할 수 없습니다."),
-    AVAILABILITY_NOT_FOUND(404, "AVAILABILITY_003", "수업 가능 시간을 찾을 수 없습니다."),
-    AVAILABILITY_UNAUTHORIZED(403, "AVAILABILITY_004", "본인의 수업 시간만 삭제할 수 있습니다."),
+    AVAILABILITY_TIME_PASSED(400, "AVAILABILITY_003", "현재 시간 이전의 시간은 등록할 수 없습니다."),
+    AVAILABILITY_NOT_FOUND(404, "AVAILABILITY_004", "수업 가능 시간을 찾을 수 없습니다."),
+    AVAILABILITY_UNAUTHORIZED(403, "AVAILABILITY_005", "본인의 수업 시간만 삭제할 수 있습니다."),
 
     // 시스템 오류
     NULL_POINT_ERROR(500, "SYS_001", "NullPointerException 발생"),

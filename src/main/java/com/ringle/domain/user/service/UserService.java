@@ -9,13 +9,13 @@ import com.ringle.domain.user.repository.UserRepository;
 import com.ringle.common.exception.BusinessException;
 import com.ringle.common.exception.ExceptionCode;
 import com.ringle.security.CustomUserDetails;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 사용자 회원가입/로그인 관련 비즈니스 로직

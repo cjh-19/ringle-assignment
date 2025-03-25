@@ -1,6 +1,7 @@
 package com.ringle.domain.availability.controller;
 
 import com.ringle.domain.availability.dto.request.AvailabilityRequestDto;
+import com.ringle.domain.availability.dto.response.AvailabilityResponseDto;
 import com.ringle.domain.availability.service.AvailabilityService;
 import com.ringle.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,5 +48,19 @@ public class AvailabilityController {
     ) {
         availabilityService.deleteAvailability(availabilityId, userDetails.getUser());
         return ResponseEntity.ok(Map.of("code", 200, "message", "수업 가능 시간이 삭제되었습니다."));
+    }
+
+    /**
+     * 튜터가 등록한 수업 가능 시간 조회
+     * - 본인의 모든 등록된 시간대 반환
+     * - 정렬: 시작 시간 오름차순
+     */
+    @Operation(summary = "내 수업 가능 시간 조회", description = "튜터가 등록한 수업 가능 시간 목록을 반환합니다.")
+    @GetMapping
+    public ResponseEntity<?> getMyAvailabilities(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        List<AvailabilityResponseDto> result = availabilityService.getMyAvailabilities(userDetails.getUser());
+        return ResponseEntity.ok(Map.of("code", 200, "data", result));
     }
 }

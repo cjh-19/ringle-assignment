@@ -24,9 +24,7 @@ public class AuthController {
 
     /**
      * 회원가입 API
-     *
-     * @param request 회원가입 요청 데이터
-     * @return 200 OK + 메시지
+     * - 학생 또는 튜터가 이메일/비밀번호 기반으로 회원가입 수행
      */
     @Operation(summary = "회원가입", description = "학생 또는 튜터가 회원가입을 수행합니다.")
     @PostMapping("/signup")
@@ -37,9 +35,7 @@ public class AuthController {
 
     /**
      * 로그인 API
-     *
-     * @param request 로그인 요청 데이터
-     * @return JWT 토큰 + 사용자 역할 반환
+     * - 이메일/비밀번호로 인증 후 JWT 토큰 반환
      */
     @Operation(summary = "로그인", description = "이메일과 비밀번호로 로그인하고 JWT 토큰을 반환합니다.")
     @PostMapping("/signin")

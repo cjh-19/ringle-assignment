@@ -33,14 +33,14 @@ public class TutorAvailabilityService {
         LocalDateTime start = request.getStartTime();
         int minute = start.getMinute();
 
-        // 정각 또는 30분 단위가 아닐 경우 예외
-        if (minute != 0 && minute != 30) {
-            throw new BusinessException(ExceptionCode.INVALID_START_TIME);
-        }
-
         // 현재 이전의 시간 등록 시 예외
         if (start.isBefore(LocalDateTime.now())) {
             throw new BusinessException(ExceptionCode.AVAILABILITY_TIME_PASSED);
+        }
+
+        // 정각 또는 30분 단위가 아닐 경우 예외
+        if (minute != 0 && minute != 30) {
+            throw new BusinessException(ExceptionCode.INVALID_START_TIME);
         }
 
         // 30분 단위로 시간 나눠서 저장

@@ -62,6 +62,7 @@ public class LessonService {
      * - Redis 기반 분산 락으로 동시성 문제 해결
      * - 대체 튜터 매칭 로직 포함
      */
+    @Transactional
     public void bookLesson(LessonRequestDto request, User student) {
         // Redis 분산 락 키: tutorId + startTime 조합
         String lockKey = "lesson:" + request.getTutorId() + ":" + request.getStartTime();
@@ -98,6 +99,7 @@ public class LessonService {
                             a.setBooked(true);
                             availabilityRepository.save(a);
                         });
+                        availabilityRepository.flush();
                         return null;
                     }
                 }
@@ -115,6 +117,13 @@ public class LessonService {
                 availabilityRepository.save(a);
             });
 
+            /***
+             *  @Transactional 사용으로
+             *  save()는 메모리에만 저장됨 (flush 전까지는 DB 반영 X)
+             *  다른 쓰레드가 Availability를 조회할 때 여전히 isBooked = false 로 보이는 현상이 발생
+             *  flush()를 통해 save한 내용을 즉시 DB에 반영
+             */
+            availabilityRepository.flush();
             return null;
         });
     }

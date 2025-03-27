@@ -2,7 +2,7 @@ package com.ringle.domain.availability.controller;
 
 import com.ringle.domain.availability.dto.request.AvailabilityRequestDto;
 import com.ringle.domain.availability.dto.response.AvailabilityResponseDto;
-import com.ringle.domain.availability.service.AvailabilityService;
+import com.ringle.domain.availability.service.TutorAvailabilityService;
 import com.ringle.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TutorAvailabilityController {
 
-    private final AvailabilityService availabilityService;
+    private final TutorAvailabilityService tutorAvailabilityService;
 
     /**
      * 수업 가능 시간 등록
@@ -33,7 +33,7 @@ public class TutorAvailabilityController {
             @Valid @RequestBody AvailabilityRequestDto request,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        availabilityService.createAvailability(request, userDetails.getUser());
+        tutorAvailabilityService.createAvailability(request, userDetails.getUser());
         return ResponseEntity.ok(Map.of("code", 200, "message", "수업 가능 시간이 등록되었습니다."));
     }
 
@@ -46,7 +46,7 @@ public class TutorAvailabilityController {
             @PathVariable Long availabilityId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        availabilityService.deleteAvailability(availabilityId, userDetails.getUser());
+        tutorAvailabilityService.deleteAvailability(availabilityId, userDetails.getUser());
         return ResponseEntity.ok(Map.of("code", 200, "message", "수업 가능 시간이 삭제되었습니다."));
     }
 
@@ -60,7 +60,7 @@ public class TutorAvailabilityController {
     public ResponseEntity<?> getMyAvailabilities(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<AvailabilityResponseDto> result = availabilityService.getMyAvailabilities(userDetails.getUser());
+        List<AvailabilityResponseDto> result = tutorAvailabilityService.getMyAvailabilities(userDetails.getUser());
         return ResponseEntity.ok(Map.of("code", 200, "data", result));
     }
 }

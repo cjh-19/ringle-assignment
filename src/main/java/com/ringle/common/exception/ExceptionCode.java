@@ -11,6 +11,10 @@ public enum ExceptionCode {
     USER_NOT_FOUND(404, "USER_001", "사용자를 찾을 수 없습니다."),
     DUPLICATE_EMAIL(409, "USER_002", "이미 사용 중인 이메일입니다."),
     PASSWORD_MISMATCH(400, "USER_003", "비밀번호가 일치하지 않습니다."),
+    TUTOR_AVAILABILITY_NOT_FOUND(404, "TUTOR_001", "수업 가능한 튜터가 없습니다."),
+
+    // 수업 조회 예외
+    DATE_IN_THE_PAST(400, "DATE_001", "과거 날짜는 예약할 수 없습니다."),
 
     // 수업 가능 시간 등록 / 삭제 예외
     INVALID_START_TIME(400, "AVAILABILITY_001", "시작 시간은 정각 또는 30분이어야 합니다."),

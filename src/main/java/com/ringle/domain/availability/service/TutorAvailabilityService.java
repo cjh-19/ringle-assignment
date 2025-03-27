@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class AvailabilityService {
+public class TutorAvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
 

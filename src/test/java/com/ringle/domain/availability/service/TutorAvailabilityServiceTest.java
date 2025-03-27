@@ -27,40 +27,52 @@ class TutorAvailabilityServiceTest {
 
     @BeforeEach
     void setUp() {
-        // 가짜(Mock) repository 생성
+        // 가짜 repository 생성 (Mockito)
         availabilityRepository = mock(AvailabilityRepository.class);
+        // 서비스 객체 생성
         tutorAvailabilityService = new TutorAvailabilityService(availabilityRepository);
 
-        // 튜터 테스트 객체 생성
+        // 테스트용 tutor 객체 생성
         tutor = User.builder()
                 .id(1L)
                 .name("Test Tutor")
                 .build();
     }
 
+    /**
+     * [정상 등록 테스트]
+     * - 60분 수업 등록 요청이 들어왔고,
+     * - 정각 또는 30분 단위이며,
+     * - 중복된 시간대가 없을 경우,
+     * - 두 개의 Availability 슬롯이 저장되어야 함
+     */
     @Test
     void createAvailability_정상등록_성공() {
         // given
         LocalDateTime startTime = LocalDateTime.now().plusDays(1).withMinute(0); // 내일 정각
         AvailabilityRequestDto request = new AvailabilityRequestDto();
         request.setStartTime(startTime);
-        request.setDuration(DurationType.SIXTY); // 60분 수업 요청 → 30분 슬롯 2개 필요
+        request.setDuration(DurationType.SIXTY); // 60분 요청 → 30분 슬롯 2개 필요
 
-        // 모든 슬롯이 존재하지 않는 상황 가정
+        // 두 슬롯 모두 존재하지 않는 것으로 설정
         when(availabilityRepository.existsByTutorIdAndStartTime(anyLong(), any())).thenReturn(false);
 
         // when
         tutorAvailabilityService.createAvailability(request, tutor);
 
         // then
-        // 30분 * 2개 = 2번 저장되어야 함
+        // 두 슬롯 저장되었는지 검증
         verify(availabilityRepository, times(2)).save(any(Availability.class));
     }
 
+    /**
+     * [예외 테스트] 시작 시간이 정각 또는 30분 단위가 아닌 경우
+     * - 예외(INVALID_START_TIME) 발생해야 함
+     */
     @Test
     void createAvailability_정각아닌시간_예외() {
         // given
-        LocalDateTime invalidStart = LocalDateTime.now().plusDays(1).withMinute(15); // 15분 시작 (예외)
+        LocalDateTime invalidStart = LocalDateTime.now().plusDays(1).withMinute(15); // 15분 → 잘못된 시작 시간
         AvailabilityRequestDto request = new AvailabilityRequestDto();
         request.setStartTime(invalidStart);
         request.setDuration(DurationType.THIRTY);
@@ -71,6 +83,10 @@ class TutorAvailabilityServiceTest {
                 .hasMessageContaining(ExceptionCode.INVALID_START_TIME.getMessage());
     }
 
+    /**
+     * [예외 테스트] 과거 시간대에 등록 요청한 경우
+     * - 예외(AVAILABILITY_TIME_PASSED) 발생해야 함
+     */
     @Test
     void createAvailability_과거시간등록_예외() {
         // given
@@ -85,6 +101,10 @@ class TutorAvailabilityServiceTest {
                 .hasMessageContaining(ExceptionCode.AVAILABILITY_TIME_PASSED.getMessage());
     }
 
+    /**
+     * [정상 삭제 테스트]
+     * - 본인의 예약되지 않은 슬롯을 삭제하는 경우
+     */
     @Test
     void deleteAvailability_정상삭제_성공() {
         // given
@@ -95,20 +115,24 @@ class TutorAvailabilityServiceTest {
                 .isBooked(false)
                 .build();
 
-        // 튜터가 본인 슬롯을 삭제하는 상황
+        // repository가 해당 슬롯을 반환한다고 설정
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
 
         // when
         tutorAvailabilityService.deleteAvailability(1L, tutor);
 
         // then
-        verify(availabilityRepository).delete(availability);
+        verify(availabilityRepository).delete(availability); // 삭제 메서드가 호출되었는지 검증
     }
 
+    /**
+     * [예외 테스트] 다른 튜터의 슬롯을 삭제하려는 경우
+     * - 예외(AVAILABILITY_UNAUTHORIZED) 발생해야 함
+     */
     @Test
     void deleteAvailability_타튜터삭제시도_예외() {
         // given
-        User anotherTutor = User.builder().id(99L).build(); // 본인이 아님
+        User anotherTutor = User.builder().id(99L).build(); // 현재 사용자가 아님
 
         Availability availability = Availability.builder()
                 .id(1L)
@@ -117,6 +141,7 @@ class TutorAvailabilityServiceTest {
                 .isBooked(false)
                 .build();
 
+        // repository가 해당 availability 반환
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
 
         // then
@@ -125,6 +150,10 @@ class TutorAvailabilityServiceTest {
                 .hasMessageContaining(ExceptionCode.AVAILABILITY_UNAUTHORIZED.getMessage());
     }
 
+    /**
+     * [예외 테스트] 이미 예약된 슬롯을 삭제하려는 경우
+     * - 예외(ALREADY_BOOKED) 발생해야 함
+     */
     @Test
     void deleteAvailability_이미예약된경우_예외() {
         // given
@@ -132,9 +161,10 @@ class TutorAvailabilityServiceTest {
                 .id(1L)
                 .tutor(tutor)
                 .startTime(LocalDateTime.now().plusDays(1))
-                .isBooked(true) // 이미 예약됨
+                .isBooked(true) // 예약됨
                 .build();
 
+        // 해당 availability가 반환되도록 설정
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
 
         // then
@@ -143,6 +173,10 @@ class TutorAvailabilityServiceTest {
                 .hasMessageContaining(ExceptionCode.ALREADY_BOOKED.getMessage());
     }
 
+    /**
+     * [정상 조회 테스트]
+     * - tutor의 수업 가능 시간들을 정상적으로 조회하고 DTO로 변환해야 함
+     */
     @Test
     void getMyAvailabilities_정상조회_성공() {
         // given
@@ -154,7 +188,7 @@ class TutorAvailabilityServiceTest {
                 .isBooked(false)
                 .build();
 
-        // 가짜 응답 설정
+        // 가짜 availability 목록 반환
         when(availabilityRepository.findByTutorIdOrderByStartTimeAsc(tutor.getId()))
                 .thenReturn(List.of(a1));
 
@@ -162,7 +196,8 @@ class TutorAvailabilityServiceTest {
         List<AvailabilityResponseDto> result = tutorAvailabilityService.getMyAvailabilities(tutor);
 
         // then
-        assertThat(result).hasSize(1); // 결과 크기 확인
-        assertThat(result.get(0).getId()).isEqualTo(a1.getId()); // ID 값 일치 확인
+        assertThat(result).hasSize(1); // 1개 조회되었는지 확인
+        assertThat(result.get(0).getId()).isEqualTo(a1.getId()); // ID 일치 여부 검증
     }
 }
+

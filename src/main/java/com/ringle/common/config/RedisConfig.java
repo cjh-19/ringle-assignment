@@ -18,7 +18,7 @@ public class RedisConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
         // 단일 Redis 서버 주소 지정
-        config.useSingleServer().setAddress("redis://localhost:6379");
+        config.useSingleServer().setAddress("redis://ringle-redis:6379");
         return Redisson.create(config);
     }
 }

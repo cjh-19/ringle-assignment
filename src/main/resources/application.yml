@@ -5,9 +5,11 @@ spring:
   # MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ringle?characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+    url: jdbc:mysql://ringle-mysql:3306/ringle?characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
     username: ringle
     password: 1234
+    hikari:
+      connection-timeout: 30000
 
   jpa:
     hibernate:
@@ -16,7 +18,7 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: ringle-redis
       port: 6379
 
 # JWT

@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ringle?characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
-    username: root
+    username: ringle
     password: 1234
 
   jpa:

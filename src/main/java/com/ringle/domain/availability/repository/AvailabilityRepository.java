@@ -25,4 +25,22 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
             "ORDER BY a.startTime ASC")
     List<Availability> findUnbookedSlotsForToday(@Param("start") LocalDateTime start,
                                                  @Param("end") LocalDateTime end);
+
+    /**
+     * 지정한 튜터의 수업 가능 시간 목록 조회
+     * - 시작 시각 이상, 종료 시각 이하 범위에서 예약되지 않은 시간대만 반환
+     */
+    @Query("SELECT a FROM Availability a " +
+            "WHERE a.tutor.id = :tutorId AND a.startTime >= :start AND a.endTime <= :end AND a.isBooked = false")
+    List<Availability> findAvailableSlots(Long tutorId, LocalDateTime start, LocalDateTime end);
+
+    /**
+     * 대체 튜터 후보 검색
+     * - 현재 튜터를 제외한 다른 튜터 중 같은 시간대에 예약되지 않은 시간대 보유한 튜터 목록
+     */
+    @Query("SELECT a FROM Availability a " +
+            "WHERE a.tutor.id <> :excludedTutorId AND a.startTime >= :start AND a.endTime <= :end " +
+            "AND a.isBooked = false AND a.tutor.role = com.ringle.domain.user.entity.enums.Role.TUTOR " +
+            "ORDER BY a.startTime ASC")
+    List<Availability> findAlternativeSlots(Long excludedTutorId, LocalDateTime start, LocalDateTime end);
 }

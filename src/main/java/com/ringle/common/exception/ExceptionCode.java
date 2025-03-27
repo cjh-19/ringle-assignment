@@ -23,6 +23,9 @@ public enum ExceptionCode {
     AVAILABILITY_NOT_FOUND(404, "AVAILABILITY_004", "수업 가능 시간을 찾을 수 없습니다."),
     AVAILABILITY_UNAUTHORIZED(403, "AVAILABILITY_005", "본인의 수업 시간만 삭제할 수 있습니다."),
 
+    // 수업 신청 예외
+    NO_AVAILABLE_TUTOR(409, "LESSON_001", "해당 시간대에 예약 가능한 튜터가 없습니다."),
+
     // 시스템 오류
     NULL_POINT_ERROR(500, "SYS_001", "NullPointerException 발생"),
 

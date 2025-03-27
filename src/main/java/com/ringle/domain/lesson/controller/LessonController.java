@@ -1,6 +1,7 @@
 package com.ringle.domain.lesson.controller;
 
-import com.ringle.domain.lesson.dto.LessonInfoResponseDto;
+import com.ringle.domain.lesson.dto.request.LessonRequestDto;
+import com.ringle.domain.lesson.dto.response.LessonInfoResponseDto;
 import com.ringle.domain.lesson.service.LessonService;
 import com.ringle.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,5 +33,19 @@ public class LessonController {
     public ResponseEntity<?> getMyLessons(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<LessonInfoResponseDto> lessons = lessonService.getLessonsByStudent(userDetails.getUser());
         return ResponseEntity.ok(Map.of("code", 200, "data", lessons));
+    }
+
+    /**
+     * 수업 신청
+     * - 학생이 수업을 예약할 수 있도록 요청 처리
+     */
+    @PostMapping("/book")
+    @Operation(summary = "수업 신청", description = "수업 시간, 길이, 튜터 정보를 바탕으로 수업을 신청합니다.")
+    public ResponseEntity<?> bookLesson(
+            @RequestBody LessonRequestDto request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        lessonService.bookLesson(request, userDetails.getUser());
+        return ResponseEntity.ok(Map.of("code", 200, "message", "수업이 성공적으로 신청되었습니다."));
     }
 }

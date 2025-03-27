@@ -1,4 +1,4 @@
-package com.ringle.domain.lesson.dto;
+package com.ringle.domain.lesson.dto.response;
 
 import com.ringle.domain.lesson.entity.enums.DurationType;
 import com.ringle.domain.lesson.entity.enums.LessonStatus;

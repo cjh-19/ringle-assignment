@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/tutor/availabilities")
 @RequiredArgsConstructor
-public class AvailabilityController {
+public class TutorAvailabilityController {
 
     private final AvailabilityService availabilityService;
 

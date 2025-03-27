@@ -1,6 +1,6 @@
 package com.ringle.domain.availability.dto.request;
 
-import com.ringle.domain.availability.entity.enums.DurationType;
+import com.ringle.domain.lesson.entity.enums.DurationType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 

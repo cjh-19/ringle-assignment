@@ -43,7 +43,7 @@ public class AvailabilityService {
             throw new BusinessException(ExceptionCode.AVAILABILITY_TIME_PASSED);
         }
 
-        // 3. 30분 단위로 시간 나눠서 저장
+        // 30분 단위로 시간 나눠서 저장
         int duration = request.getDuration().getMinutes(); // 30 또는 60
         int slots = duration / 30;
 

@@ -1,4 +1,4 @@
-package com.ringle.domain.availability.entity.enums;
+package com.ringle.domain.lesson.entity.enums;
 
 import lombok.Getter;
 
